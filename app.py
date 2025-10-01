@@ -84,7 +84,8 @@ def autenticacao():
     if request.method == 'POST':
         email = request.form['email']
         senha = request.form['senha']
-        usuario = query_db('SELECT * FROM usuarios WHERE email = %s', (email,), one=True)
+        usuario = query_db(
+            'SELECT * FROM usuarios WHERE email = %s', (email,), one=True)
         if usuario and check_password_hash(usuario['senha'], senha):
             session['usuario_id'] = usuario['id']
             session['usuario_nome'] = usuario['nome']
@@ -101,12 +102,13 @@ def cadastro_usuario():
         email = request.form['email']
         senha = request.form['senha']
 
-        usuario_existente = query_db('SELECT id FROM usuarios WHERE email = %s', (email,), one=True)
+        usuario_existente = query_db(
+            'SELECT id FROM usuarios WHERE email = %s', (email,), one=True)
 
         if usuario_existente:
             return render_template('cadastro_usuario.html', erro='E-mail já cadastrado')
 
-        senha_hash = generate_password_hash(senha, method='pbkf2:sha256')
+        senha_hash = generate_password_hash(senha, method='pbkdf2:sha256')
         execute_db('INSERT INTO usuarios (nome, email, senha) VALUES (%s, %s, %s)',(nome, email, senha_hash))
         return redirect(url_for('autenticacao'))
     return render_template('cadastro_usuario.html')
@@ -129,19 +131,19 @@ def cadastro_produto():
         preco = float(request.form['preco'])
         quantidade_minima = int(request.form['quantidade_minima'])
 
-        produto = query_db('SELECT * FROM produtos WHERE nome = %s', (nome,), one=True)
+        produto = query_db(
+            'SELECT * FROM produtos WHERE nome = %s', (nome,), one=True)
 
         if produto:
-            execute_db('UPDATE produtos SET quantidade = quantidade + %s, quantidade_minima = %s WHERE id = %s',
-                    (quantidade, quantidade_minima, produto['id']))
+            execute_db('UPDATE produtos SET quantidade = quantidade + %s, quantidade_minima = %s WHERE id = %s',(quantidade, quantidade_minima, produto['id']))
             produto_id = produto['id']
         else:
             # PostgreSQL retorna o ID na inserção, precisa do RETURNING
-            result = execute_db('INSERT INTO produtos (nome, descricao, quantidade, preco, quantidade_minima) VALUES (%s, %s, %s, %s, %s) RETURNING id',(nome, descricao, quantidade, preco, quantidade_minima))
+            result = execute_db('INSERT INTO produtos (nome, descricao, quantidade, preco, quantidade_minima) VALUES (%s, %s, %s, %s, %s) RETURNING id',
+                                (nome, descricao, quantidade, preco, quantidade_minima))
             produto_id = result
 
-        execute_db('INSERT INTO movimentacao_estoque (produto_id, tipo_movimentacao, quantidade, usuario_id) VALUES (%s, %s, %s, %s)',
-                (produto_id, 'entrada', quantidade, session['usuario_id']))
+        execute_db('INSERT INTO movimentacao_estoque (produto_id, tipo_movimentacao, quantidade, usuario_id) VALUES (%s, %s, %s, %s)',(produto_id, 'entrada', quantidade, session['usuario_id']))
         return redirect(url_for('cadastro_produto'))
 
     # Ordenar os produtos com base na proximidade da quantidade mínima
@@ -170,7 +172,7 @@ def saida_produto(produto_id):
 @login_required
 def estoque():
     movimentacoes = query_db(
-        'SELECT * FROM movimentacao_estoque AS m JOIN usuarios AS u ON m.usuario_id = u.id ORDER BY m.data_movimentacao DESC')
+        'SELECT * FORM movimentacao_estoque AS m JOIN usuarios AS u ON m.usuario_id = u.id ORDER BY m.data_movimentacao DESC')
     return render_template('estoque.html', movimentacoes=movimentacoes, usuario=session.get('usuario_nome'))
 
 

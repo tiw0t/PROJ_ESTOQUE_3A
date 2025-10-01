@@ -25,3 +25,7 @@ CREATE TABLE IF NOT EXISTS movimentacao_estoque(
 	FOREIGN KEY (produto_id) REFERENCES produtos(id),
 	FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
+
+
+Caso queiram conhecer mais sobre a tag step, segue link: 
+https://www.gov.br/ds/components/step?tab=desenvolvedor
