@@ -33,3 +33,14 @@ button {
     height: 40px;
     border-radius: 10px;
 }
+.botao_saida{
+    background-color: #257ea1;
+    color: #ffffff;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    width: 30%;
+    height: 40px;
+    border-radius: 10px;
+    margin-left: 30px;
+}

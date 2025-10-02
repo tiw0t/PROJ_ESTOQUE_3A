@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -46,6 +46,7 @@
 
                 <head>
                     <tr>
+                        <th>ID Produtos</th>
                         <th>Nome</th>
                         <th>Descrição</th>
                         <th>Quantidade</th>
@@ -57,14 +58,15 @@
                     {% for produto in produtos %}
                     <tr
                         class="{% if produto.quantidade <= produto.quantidade_minima %} Alerta=estoque-baixo {% endif %}">
+                        <td>{{ produto.id }}</td>
                         <td>{{ produto.nome }}</td>
                         <td>{{ produto.descricao }}</td>
-                        <td>{{ produto.quantidade }}</td>
+                        <td class="quantidade">{{ produto.quantidade }}</td>
                         <td>R$ {{ "%.2f"|format(produto.preco) }}</td>
                         <td>
-                            <form action="{{url_for('saida_produto', produto_id=produto)}}" method="post">
+                            <form action="{{url_for('saida_produto', produto_id=produto.id)}}" method="post">
                                 <input type="number" name="quantidade_saida" value="1" min="1" max="{{ produto.quantidade }}" style="width: 50px;">
-                                <button type="submit">Saída</button> 
+                                <button class="botao_saida" type="submit">Saída</button> 
                             </form>
                         </td>
                     </tr>
