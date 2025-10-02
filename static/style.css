@@ -36,11 +36,34 @@ button {
 .botao_saida{
     background-color: #257ea1;
     color: #ffffff;
-    padding: 5px;
     border: none;
     cursor: pointer;
-    width: 30%;
-    height: 40px;
     border-radius: 10px;
-    margin-left: 30px;
+    width: 95px; 
+    height: 30px; /* Alinha a altura com o input */
+    padding: 0 8px; /* Reduz o padding para diminuir o tamanho */
+    margin-left: 0; /* Remove a margem grande que estava empurrando o botão */
+    line-height: 20px; /* Ajuda no alinhamento vertical do texto */
+
 }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+}
+th, td {
+    border: 1px solid #ccc; 
+    padding: 10px; 
+    text-align: left; 
+}
+
+thead th {
+    background-color: #f0f0f0; 
+    font-weight: bold;
+    color: #333;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+

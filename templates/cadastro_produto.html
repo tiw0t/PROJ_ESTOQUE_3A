@@ -41,19 +41,19 @@
         <hr>
 
         <div class="list-container">
-            <h2>Listar Produtos</h2>
+            <h2>Listar Produtos:</h2>
             <table>
-
-                <head>
+                <thead>
                     <tr>
-                        <th>ID Produtos</th>
+                        <th>ID</th>
                         <th>Nome</th>
                         <th>Descrição</th>
                         <th>Quantidade</th>
                         <th>Preço</th>
                         <th>Quantidade Mínima</th>
+                        <th>Ações/Saída</th>
                     </tr>
-                </head>
+                </thead>
                 <tbody>
                     {% for produto in produtos %}
                     <tr
@@ -63,16 +63,21 @@
                         <td>{{ produto.descricao }}</td>
                         <td class="quantidade">{{ produto.quantidade }}</td>
                         <td>R$ {{ "%.2f"|format(produto.preco) }}</td>
+                        
+                        <td>{{ produto.quantidade_minima }}</td>
+
                         <td>
                             <form action="{{url_for('saida_produto', produto_id=produto.id)}}" method="post">
-                                <input type="number" name="quantidade_saida" value="1" min="1" max="{{ produto.quantidade }}" style="width: 50px;">
+                                <input type="number" name="quantidade_saida" value="1" min="1" max="{{ produto.quantidade }}" style="width: 80px;">
                                 <button class="botao_saida" type="submit">Saída</button> 
+                                
                             </form>
+
                         </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="6">Nunhum Produto Cadastrado.</td>
+                        <td colspan="7">Nunhum Produto Cadastrado!</td>
                     </tr>
                     {% endfor %}
                 </tbody>
