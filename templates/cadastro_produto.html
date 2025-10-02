@@ -4,19 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro e Listagem de Produtos</title>
+    <title>Cadastro e Listagem de Produtos:</title>
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
 </head>
 
 <body>
     <div class="container">
+
         <div class="header">
             <h1>Olá, {{ usuario }}!</h1>
             <div class="nav-links">
-                <a href="{{ url_for('estoque')}}">Ver Estoque</a>
-                <a href="{{ url_for('logout')}}">Sair</a>
+                <a class="botao1" href="{{ url_for('estoque')}}">Ver Estoque</a>
+                <a class="botao2" href="{{ url_for('logout')}}">Sair</a>
             </div>
+
         </div>
         <div class="form-container">
             <h2>Cadastrar/Adicionar Produto</h2>
@@ -63,15 +65,18 @@
                         <td>{{ produto.descricao }}</td>
                         <td class="quantidade">{{ produto.quantidade }}</td>
                         <td>R$ {{ "%.2f"|format(produto.preco) }}</td>
-                        
+
                         <td>{{ produto.quantidade_minima }}</td>
 
                         <td>
                             <form action="{{url_for('saida_produto', produto_id=produto.id)}}" method="post">
-                                <input type="number" name="quantidade_saida" value="1" min="1" max="{{ produto.quantidade }}" style="width: 80px;">
-                                <button class="botao_saida" type="submit">Saída</button> 
-                                
+                                <input type="number" name="quantidade_saida" value="1" min="1"
+                                    max="{{ produto.quantidade }}" style="width: 30px;">
+                                <button class="botao_saida" type="submit">Saída</button>
                             </form>
+                            <form action="{{url_for('editar_produto', produto_id=produto.id)}}">
+                                <button
+                                    class="botao_editar" type="submit">Editar</button></form>
 
                         </td>
                     </tr>

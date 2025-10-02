@@ -176,5 +176,36 @@ def estoque():
     return render_template('estoque.html', movimentacoes=movimentacoes, usuario=session.get('usuario_nome'))
 
 
+
+@app.route('/editar_produto', methods=['GET', 'POST'])
+@login_required
+def editar_produto():
+    if request.method == 'POST':
+        nome = request.form['nome']
+        descricao = request.form['descricao']
+        quantidade = int(request.form['quantidade'])
+        preco = float(request.form['preco'])
+        quantidade_minima = int(request.form['quantidade_minima'])
+
+        produto = query_db(
+            'SELECT * FROM produtos WHERE nome = %s', (nome,), one=True)
+
+        if produto:
+            execute_db('UPDATE produtos SET quantidade = quantidade + %s, quantidade_minima = %s WHERE id = %s',(quantidade, quantidade_minima, produto['id']))
+            produto_id = produto['id']
+        else:
+            # PostgreSQL retorna o ID na inserção, precisa do RETURNING
+            result = execute_db('INSERT INTO produtos (nome, descricao, quantidade, preco, quantidade_minima) VALUES (%s, %s, %s, %s, %s) RETURNING id',
+                                (nome, descricao, quantidade, preco, quantidade_minima))
+            produto_id = result
+
+        execute_db('INSERT INTO movimentacao_estoque (produto_id, tipo_movimentacao, quantidade, usuario_id) VALUES (%s, %s, %s, %s)',(produto_id, 'entrada', quantidade, session['usuario_id']))
+        return redirect(url_for('cadastro_produto'))
+
+    # Ordenar os produtos com base na proximidade da quantidade mínima
+    produtos = query_db(
+        'SELECT * FROM produtos ORDER BY quantidade - quantidade_minima')
+    return render_template('cadastro_produto.html', produtos=produtos, usuario=session.get('usuario_nome'))
+
 if __name__ == '__main__':
     app.run(debug=True) 
